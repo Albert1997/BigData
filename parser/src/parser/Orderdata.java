@@ -35,7 +35,7 @@ public class Orderdata {
             int step = 1;
             int index = 0;
             int space = 0;
-            Boolean stepfilled = false;
+            int stepfilled = 0;
             Boolean release = true;
             Boolean good = true;
             
@@ -56,7 +56,7 @@ public class Orderdata {
                 step = 1;
                 space = 0;
                 Boolean release = true;
-                stepfilled = false;
+                stepfilled = 0;
                 
                 
                     // Kijk daarna per zin char voor char wat er staat. 
@@ -258,108 +258,83 @@ public class Orderdata {
             
             if ( step == 1 ) {
               
-                if ( ((ch >= 0 && ch <= 9) || ch == '.' || ch == ' ') && space < 17 ) {
+                if ( ((ch >= 0 || ch <= 9) || ch == '.' || ch == ' ') && space < 17 ) {
                     space++;
                 }
                 
                 if ( space >= 17 ) {
                     step = 2;
+                    
                 }
                 
             }
             
             if ( step == 2 ) {
                 if ( ch != ' ' ) {
-                    System.out.print(ch);
-                    stepfilled = true;
+                    stepfilled = 1;
+                    //System.out.print(ch);
+                    newWord += ch;
                 }
-                if ( ch == ' ' && stepfilled ) {
+                if ( ch == ' ' && stepfilled == 1 ) {
                     step = 3;
+                    values.add(newWord);
+                    newWord = "";
                 }
             }
             
             if ( step == 3 ) {
-                if ( (ch >= 0 && ch <= 9) ) {
-                    //  System.out.print(ch);
+                if ( ch != ' ' || (ch >= 0 && ch <= 9) || ch == '.' ) {
+                    
+                    //System.out.print(ch);
+                    newWord += ch;
+                    
+                    if ( ch == '.' ) {
+                        stepfilled = 2;
+                    }
+                    
+                } else if ( ch == ' ' && stepfilled == 2 ) {
+                    step = 4;
+                    values.add(newWord);
+                    newWord = "";
                 }
             }
             
+            if ( step == 4 ) {
+                
+                if ( ch == '(' ) {
+                    step = 5;
+                    values.add(newWord);
+                    newWord = "";
+                } else if ( ch != ' ' ) {
+                    //System.out.print(ch);
+                    newWord += ch;
+                    stepfilled = 3;
+                }
+                
+            }
+            
+            if ( step == 5 ) {
+                if ( (ch >= 0 || ch <= 9) && (ch != ' ') && (ch != '(') && (ch != ')') ) {
+                    
+                    //System.out.print(ch);
+                    newWord += ch;
+                    
+                }
+                if ( ch == ')' ) {
+                    step = 6;
+                    values.add(newWord);
+                    newWord = "";
+                }
+                
+                
+            }
+            
+            if ( step == 6 ) {
+                //System.out.print("++++");
+                //hier hoeft niks te gebeuren
+            }
+            
         }
-        
-        
-        
-        
-        
-        
-//       if(stop == false){
-//           // Kijkt of char spatie is
-//           if (ch == ' ')
-//           {
-//           whitespace++;
-//           }    
-//                // Sla de eerste 17 over 
-//                if (charIndex > 17)
-//                {
-//                
-//                    if (listIndex == 3 && ch == ' ')
-//                    {
-//                        newWord += ch;
-//                        whitespace = 0;
-//                    }
-//                    if (listIndex != 3 && (ch >= '0' && ch <= '9') || ch == '.')
-//                    {
-//                        newWord += ch;
-//                        whitespace = 0; 
-//                    }
-//                    if ( ch != ',' && ch != '\t' && ch != '(' )
-//                    {
-//                        if (listIndex == 3)
-//                        {
-//                        newWord += ch;
-//                        whitespace = 0;
-//                        }
-//                    }
-//                // Wanneer newWord een waarde heeft en de volgende char een spatie is of een volgende regel is, voeg dit woord toe aan de lijst waar de lijstIndex op dat moment is
-//
-//                    if (listIndex == 1 && newWord.length() > 0 && ch == ' ')
-//                    {
-//                        
-//                         values.add(newWord);
-//                         
-//                         listIndex ++;
-//                    
-//                         newWord = "";
-//                    }
-//                    if (listIndex == 2 && newWord.length() > 0 && ch == ' ')
-//                    {
-//                        values.add(newWord);
-//                       
-//                        listIndex ++;
-//                    
-//                        newWord = "";
-//                    }
-//                    
-//                    if (listIndex == 3 && ch == '(')
-//                    {
-//                        values.add(newWord);
-//                        //System.out.print("2@" + newWord);
-//                        listIndex++; 
-//                        newWord = "";
-//                        
-//                    }
-//                    
-//                    if (listIndex == 4 && ch == ')' || ch == '/')
-//                    {
-//                        values.add(newWord);
-//                        newWord = "";
-//                        stop = true;
-//                        listIndex = 1;
-//                    }
-//
-//                    
-//                } // Check if newword een value heeft en het eerstvolgende char een whitespace is. Dan list.add
-//                
-//             } 
                               
     }
     // Bernard zou deze doen maar is ziek, 
