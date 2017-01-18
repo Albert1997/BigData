@@ -1,0 +1,77 @@
+DROP TABLE actors1;
+DROP TABLE actresses1;
+DROP TABLE movies1;
+DROP TABLE ratings1;
+DROP TABLE locations1;
+DROP TABLE genres1;
+
+
+
+CREATE TABLE IF NOT EXISTS actors1(
+    actor_id serial PRIMARY KEY, 
+    name VARCHAR,
+    movie VARCHAR,
+    year INT
+);
+CREATE TABLE IF NOT EXISTS actresses1(
+    actres_id serial PRIMARY KEY, 
+    name VARCHAR,
+    movie VARCHAR,
+    year INT
+);
+CREATE TABLE IF NOT EXISTS movies1(
+    movie_id serial PRIMARY KEY, 
+    movie VARCHAR,
+    year INT
+);
+CREATE TABLE IF NOT EXISTS ratings1(
+    rating_id serial PRIMARY KEY, 
+    votes INT,
+    rating DECIMAL,
+    movie VARCHAR,
+    year INT
+    
+);
+CREATE TABLE IF NOT EXISTS locations1(
+    location_id serial PRIMARY KEY, 
+    location VARCHAR,
+    movie VARCHAR,
+    year INT  
+);
+CREATE TABLE IF NOT EXISTS genres1(
+    genre_id serial PRIMARY KEY, 
+    genre VARCHAR,
+    movie VARCHAR,
+    year INT  
+);
+
+CREATE TABLE actors AS
+SELECT actors1.actor_id, actors1.name movies1.movie_id FROM actors1,movies1
+WHERE actors1.movie = movies1.movie 
+AND actors1.year = movies1.year
+
+CREATE TABLE actresses AS
+SELECT actresses1.actres_id, actresses1.name, movies1.movie_id FROM actresses1,movies1
+WHERE actresses1.movie = movies1.movie
+AND actresses1.year = movies1.year
+
+CREATE TABLE genres AS
+SELECT genres1.genre_id, movies1.movie_id FROM genres1,movies1
+WHERE genres1.movie = movies1.movie
+AND genres1.year = movies1.year
+
+CREATE TABLE locations AS
+SELECT locations1.location_id, movies1.movie_id FROM locations1, movies1
+WHERE locations1.movie = movies1.movie
+AND locations1.year = movies1.year
+
+CREATE TABLE ratings AS
+SELECT ratings1.rating_id, movies1.movie_id FROM ratings1,movies1
+WHERE ratings1.movie = movies1.movie
+AND ratings1.year = movies1.year
+
+CREATE TABLE soundtracks AS
+SELECT soundtracks1.soundtrack_id, movies1.movie_id FROM soundtracks1,movies1
+WHERE soundtracks1.movie = movies1.movie
+AND soundtrack1.year = movies1.year
+
