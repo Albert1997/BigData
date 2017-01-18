@@ -61,18 +61,18 @@ public class Orderdata {
                 
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
-                    {/*
+                    {
                         if (file == "actors" || file == "actresses")
                         {
                         orderActors(ch);
                         charIndex ++;
                         }
-                        
+                        /*
                         if (file == "movies")
                         {
                             orderMovies(ch);
                             charIndex ++;
-                        }*/
+                        }
                         if (file == "ratings")
                         {
                             orderRatings(ch);
