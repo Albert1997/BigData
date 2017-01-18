@@ -48,7 +48,7 @@ public class Parser {
         s.useDelimiter("[;\r\n]+");
         // Save in a list
 
-        while(s.hasNext() && indexer < 10) {
+        while(s.hasNext() && indexer < 500) {
             String temporary = s.next();
             ordener.orderMain(temporary, fileName, indexer);
             indexer++;

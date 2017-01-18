@@ -98,9 +98,6 @@ public class Orderdata {
             }
         if (values.size() > 1 && values.size() < 5)
         {   
-            
-       
-            
             //MakeCSV.MakeCSV(values, file);
             
             
@@ -190,19 +187,23 @@ public class Orderdata {
             
     void orderActors(char ch)
     {
+        boolean comment = false;
           if (stop == false){
                         if (ch == '\t' && charIndex < 1)
                         {
                             repeat = true;
                             values.add(nameSave);
                         }
-
+                        // Woord 1 en woord 2               
                         if (values.size() < 2)
                         {
                                 if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch == ',')
                                 {
+                                    
+                                    if (comment){System.out.print(ch);}
                                     if (ch == ',' && charIndex > 5)
                                     {
+                                    if (comment){System.out.print(" SPLIT KOMMA INDEX > 5 ");}
                                     values.add(newWord);
                                     whitespace = 0;
                                     nameSave = newWord;
@@ -211,8 +212,9 @@ public class Orderdata {
                                     // Na meer dan 2 spaties staat de film
                                     else if (ch != ',')
                                         {
-                                            if (whitespace > 1 && repeat == false)
+                                            if (whitespace > 1 && repeat == false && newWord.length() > 3)
                                             {
+                                            if (comment){System.out.print(" SPLIT WHITESPACE > 1 ");}
                                             values.add(newWord);
                                             whitespace = 0;
                                             nameSave = newWord;
@@ -239,13 +241,14 @@ public class Orderdata {
                                 // Bij ( geeft die elke keer het jaartal aan, dit hebben we niet nodig alleen de titel.
                                 if (ch == '(')
                                 {
+                                    if (comment){System.out.print(" SPLIT komt ( tegen ");}
                                    values.add(newWord);
 
                                    newWord = "";
 
                                 }
                         }
-                        // When it is a 
+                        // When it is a year
                         else if (values.size() == 2)
                         {
                             
@@ -255,9 +258,17 @@ public class Orderdata {
                             }
                             if (ch == ')')
                             {
+                                if (newWord.length() == 4)
+                                {
                                 values.add(newWord);
                                 stop = true;
-
+                                }
+                                // Delete string, is geen goeie string
+                                else
+                                {
+                                    values.clear();
+                                    stop = true;
+                                }
                             }
                         }
                     }
