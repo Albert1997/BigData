@@ -27,6 +27,7 @@ public class Orderdata {
             boolean repeat;
             int charIndex = 0;
             int yearNumber = 0;
+            String wordSave = "";
             
             // Gemaakt voor ratings
             int listIndex = 1;
@@ -62,12 +63,12 @@ public class Orderdata {
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
                     {
-                        if (file == "actors" || file == "actresses")
+                        /*if (file == "actors" || file == "actresses")
                         {
                         orderActors(ch);
                         charIndex ++;
                         }
-                        /*
+                        
                         if (file == "movies")
                         {
                             orderMovies(ch);
@@ -77,17 +78,17 @@ public class Orderdata {
                         {
                             orderRatings(ch);
                             charIndex++;
-                        }/*
+                        }
                         if (file == "genres")
                         {
                             orderGenres(ch);
                             charIndex++;
-                        }/*
+                        }*/
                         if (file == "locations")
                         {
                             orderLocations(ch);
                             charIndex++;
-                        }*/
+                        }
                     }
             //Voeg de laatste nog even toe
             if (file == "genres" || file == "locations")
@@ -109,12 +110,12 @@ public class Orderdata {
             System.out.print(file);
             for (int i =0; i< values.size(); i++)
             {
-            System.out.print(" [ ");
+            System.out.print("[");
             System.out.print(values.get(i));
-            System.out.print(" ] ");
+            System.out.print("] ");
             }
             System.out.println(" ");
-            //DB.Database(values, file, indexer);
+            DB.Database(values, file, indexer);
             
         }
         // Reset values
@@ -127,15 +128,26 @@ public class Orderdata {
     {
         if ( release ) {
                     
-                    if ( step == 1 ) {
-                        if ( ch == '(' ) {
+                    if ( step == 1 )                        
+                        if ( ch == '(' ) 
+                        {
+                           if (!(wordSave).equals(newWord)){
                             step = 2;
                             values.add(newWord);
+                            //System.out.println(wordSave + "@");
+                           // System.out.println(newWord + "@");
+                            wordSave = newWord;
                             newWord = "";
+                            }
+                           
+                           else {
+                               newWord ="";
+                               release = false;
+                           }
                         } else if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '(') || (ch == ')') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') || (ch >= ' ') ) {
                             newWord += ch;
                         }
-                    }
+                    
                     
                     if ( step == 2 ) {
                         if ( ch == ')' ) {
@@ -167,7 +179,7 @@ public class Orderdata {
                         }
                     }
                     
-                } else {
+        } else {
                     if ( ch == '}' ) {
                         release = true;
                         step = 4;
