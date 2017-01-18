@@ -28,7 +28,9 @@ public class Parser {
         // Locaties voor de files
         List<String> filenames = new ArrayList();
         filenames.addAll(Arrays.asList("locations", "actors", "actresses", "ratings", "genres","movies"));
-        String userURL = "/Users/jorbe/Google Drive/Big Data Project/Files/";
+        String user = System.getProperty("user.name");
+        String userURL = "/Users/" + user + "/Google Drive/Big Data Project/Files/";
+        
         
         // File naar lijst zetten, elke waarde is 1 regel
         
