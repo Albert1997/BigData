@@ -50,7 +50,7 @@ public class Parser {
 
 
 
-        while(s.hasNext() && indexer < 2500000) {
+        while(s.hasNext() && indexer < 500) {
 
             String temporary = s.next();
             ordener.orderMain(temporary, fileName, indexer);
