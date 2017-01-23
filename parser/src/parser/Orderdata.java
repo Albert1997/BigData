@@ -26,8 +26,7 @@ public class Orderdata {
             boolean stop;
             boolean repeat;
             int charIndex = 0;
-            int yearNumber = 0;
-            String wordSave = "";
+            String movieSave = "";
             
             // Gemaakt voor ratings
             int listIndex = 1;
@@ -36,7 +35,7 @@ public class Orderdata {
             int step = 1;
             int index = 0;
             int space = 0;
-            int stepfilled = 0;
+            Boolean stepfilled = false;
             Boolean release = true;
             Boolean good = true;
             
@@ -51,19 +50,18 @@ public class Orderdata {
                 newWord = "";
                 stop = false;
                 charIndex = 0;
-                yearNumber = 0;
                 repeat = false;
                 good = true;
                 step = 1;
                 space = 0;
-                Boolean release = true;
-                stepfilled = 0;
+                release = true;
+                stepfilled = false;
                 
                 
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
                     {
-                        /*if (file == "actors" || file == "actresses")
+                        if (file == "actors" || file == "actresses")
                         {
                         orderActors(ch);
                         charIndex ++;
@@ -78,7 +76,7 @@ public class Orderdata {
                         {
                             orderRatings(ch);
                             charIndex++;
-                        }*/
+                        }/*
                         if (file == "genres")
                         {
                             orderGenres(ch);
@@ -96,107 +94,107 @@ public class Orderdata {
                     values.add(newWord);
                     newWord = "";
             }
+            // Filter fouten in de gegeven lijsten.
+            if ((file == "actors" || file == "actresses") && values.size() != 3)
+            {
+                values.clear();
+            }
+            if (file == "movies" && values.size() != 2)
+            {
+                values.clear();
+            }
+            
+        
         if (values.size() > 1 && values.size() < 5)
         {   
-            //MakeCSV.MakeCSV(values, file);
+            MakeCSV.MakeCSV(values, file);
             
-            
+            /*
             System.out.print("index: ");
             System.out.print(indexer);
             System.out.print(". File: ");
             System.out.print(file);
             for (int i =0; i< values.size(); i++)
             {
-            System.out.print("[");
+            System.out.print(" [ ");
             System.out.print(values.get(i));
-            System.out.print("] ");
+            System.out.print(" ] ");
             }
             System.out.println(" ");
+            */
+            // Voor de Database
             //DB.Database(values, file, indexer);
             
         }
+        
         // Reset values
         values.clear();
                
     }
             
     // Bernard zou deze doen maar is ziek.
-    void orderLocations(char ch)  
+    void orderLocations(char ch)
     {
         if ( release ) {
                     
-                    if ( step == 1 )                        
-                        if ( ch == '(' ) 
-                        {
-                           if (!(wordSave).equals(newWord)){
+                    if ( step == 1 ) {
+                        if ( ch == '(' ) {
                             step = 2;
                             values.add(newWord);
-                            //System.out.println(wordSave + "@");
-                           // System.out.println(newWord + "@");
-                            wordSave = newWord;
                             newWord = "";
-                            }
-                           
-                           else {
-                               newWord ="";
-                               release = false;
-                           }
-                        } else if (ch != ',' && ch != '\t'  ) {
-                            newWord += ch;
-                        }
-                    
-                    
-                    if ( step == 2)                       
-                    {
-                            if ((ch >= '0' && ch <= '9'))
-                            {
-                                newWord += ch;
-                            }
-                            
-                            if (ch == ')')
-                            {
-                                if (newWord.length() == 4)
-                                {
-                                values.add(newWord);
-                                step = 3;
-                                newWord = "";
-                                }
-                                // Delete string, is geen goeie string
-                                else
-                                {
-                                    values.clear();
-                                    step = 3;
-                                }
-                            }
-                        }
-                    
-                    
-                    if ( step == 3 ) {
-                        if ( ch == '{' ) {
-                            release = false;
-                        }
-                        
-                        if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?') || (ch == '"')|| (ch >= ' ') && ch != ',' && ch != ')' && ch != '{' ) {
+                        } else if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '(') || (ch == ')') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') || (ch >= ' ') ) {
                             newWord += ch;
                         }
                     }
                     
-        } else {
+                    if ( step == 2 ) {
+                        if ( ch == ')' ) {
+                            step = 3;
+                            values.add(newWord);
+                            newWord = "";
+                        } else if ( (ch >= '0' && ch <= '9') ) {
+                            newWord += ch;
+                        }
+                    }
+                    
+                    if ( step == 3 ) {
+                        if ( ch == '{' ) {
+                            
+                            release = false;
+                        } else {
+                            step = 4;
+                        }
+                       
+                    }
+                    
+                    if ( step == 4 ) {
+                        if ( ch == '{' ) {
+                            release = false;
+                        }
+                        
+                        if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') || (ch >= ' ') && ch != ',' && ch != ')' && ch != '{' ) {
+                            newWord += ch;
+                        }
+                    }
+                    
+                } else {
                     if ( ch == '}' ) {
                         release = true;
                         step = 4;
                     }
                 }
-    }       
+    }
+            
             
     void orderActors(char ch)
     {
         boolean comment = false;
           if (stop == false){
-                        if (ch == '\t' && charIndex < 1)
+                        if (values.size() == 0 && newWord.length() == 0 && charIndex < 3 && (ch == '\t' || whitespace > 2))
                         {
                             repeat = true;
                             values.add(nameSave);
+                            newWord = "";
                         }
                         // Woord 1 en woord 2               
                         if (values.size() < 2)
@@ -205,7 +203,7 @@ public class Orderdata {
                                 {
                                     
                                     if (comment){System.out.print(ch);}
-                                    if (ch == ',' && charIndex > 5)
+                                    if (ch == ',' && charIndex > 5 && repeat == false)
                                     {
                                     if (comment){System.out.print(" SPLIT KOMMA INDEX > 5 ");}
                                     values.add(newWord);
@@ -215,7 +213,8 @@ public class Orderdata {
                                     }
                                     // Na meer dan 2 spaties staat de film
                                     else if (ch != ',')
-                                        {
+                                        {   
+                                            // Iemand met een naam van minder dan 3 letters is niet geldig
                                             if (whitespace > 1 && repeat == false && newWord.length() > 3)
                                             {
                                             if (comment){System.out.print(" SPLIT WHITESPACE > 1 ");}
@@ -245,10 +244,23 @@ public class Orderdata {
                                 // Bij ( geeft die elke keer het jaartal aan, dit hebben we niet nodig alleen de titel.
                                 if (ch == '(')
                                 {
-                                    if (comment){System.out.print(" SPLIT komt ( tegen ");}
-                                   values.add(newWord);
+                                   if (!newWord.equals(movieSave))
+                                   {
+                                       
+                                        if (comment){System.out.print(" SPLIT komt ( tegen ");}
+                                        values.add(newWord);
+                                        // Sla movie op, wanneer de volgende dat ook is word deze niet nog vaker opgeslagen
+                                        movieSave = newWord;
 
-                                   newWord = "";
+                                        newWord = "";
+                                   }
+                                   // Wanneer het een serie is en al een keer is opgeslagen sla niks op
+                                   else 
+                                   {
+                                       values.clear();
+                                       newWord = "";
+                                       stop = true;
+                                   }
 
                                 }
                         }
@@ -262,15 +274,17 @@ public class Orderdata {
                             }
                             if (ch == ')')
                             {
-                                if (newWord.length() == 4)
+                                if (newWord.length() == 4 && values.size() == 2)
                                 {
                                 values.add(newWord);
+                                newWord = "";
                                 stop = true;
                                 }
                                 // Delete string, is geen goeie string
                                 else
                                 {
                                     values.clear();
+                                    newWord = "";
                                     stop = true;
                                 }
                             }
@@ -285,126 +299,134 @@ public class Orderdata {
             
             if ( step == 1 ) {
               
-                if ( ((ch >= 0 || ch <= 9) || ch == '.' || ch == ' ') && space < 17 ) {
+                if ( ((ch >= 0 && ch <= 9) || ch == '.' || ch == ' ') && space < 17 ) {
                     space++;
                 }
                 
                 if ( space >= 17 ) {
                     step = 2;
-                    
                 }
                 
             }
             
             if ( step == 2 ) {
                 if ( ch != ' ' ) {
-                    stepfilled = 1;
-                    //System.out.print(ch);
-                    newWord += ch;
+                    System.out.print(ch);
+                    stepfilled = true;
                 }
-                if ( ch == ' ' && stepfilled == 1 ) {
+                if ( ch == ' ' && stepfilled ) {
                     step = 3;
-                    values.add(newWord);
-                    newWord = "";
                 }
             }
             
             if ( step == 3 ) {
-                if ( ch != ' ' || (ch >= 0 && ch <= 9) || ch == '.' ) {
-                    
-                    //System.out.print(ch);
-                    newWord += ch;
-                    
-                    if ( ch == '.' ) {
-                        stepfilled = 2;
-                    }
-                    
-                } else if ( ch == ' ' && stepfilled == 2 ) {
-                    step = 4;
-                    values.add(newWord);
-                    newWord = "";
+                if ( (ch >= 0 && ch <= 9) ) {
+                    //  System.out.print(ch);
                 }
-            }
-            
-            if ( step == 4 ) {
-                
-                if ( ch == '(' ) {
-                    step = 5;
-                    values.add(newWord);
-                    newWord = "";
-                } else if ( ch != ' ' ) {
-                    //System.out.print(ch);
-                    newWord += ch;
-                    stepfilled = 3;
-                }
-                
-            }
-            
-            if ( step == 5 ) {
-                if ( (ch >= 0 || ch <= 9) && (ch != ' ') && (ch != '(') && (ch != ')') ) {
-                    
-                    //System.out.print(ch);
-                    newWord += ch;
-                    
-                }
-                if ( ch == ')' ) {
-                    step = 6;
-                    values.add(newWord);
-                    newWord = "";
-                }
-                
-                
-            }
-            
-            if ( step == 6 ) {
-                //System.out.print("++++");
-                //hier hoeft niks te gebeuren
             }
             
         }
+        
+        
+        
+        
+        
+        
+//       if(stop == false){
+//           // Kijkt of char spatie is
+//           if (ch == ' ')
+//           {
+//           whitespace++;
+//           }    
+//                // Sla de eerste 17 over 
+//                if (charIndex > 17)
+//                {
+//                
+//                    if (listIndex == 3 && ch == ' ')
+//                    {
+//                        newWord += ch;
+//                        whitespace = 0;
+//                    }
+//                    if (listIndex != 3 && (ch >= '0' && ch <= '9') || ch == '.')
+//                    {
+//                        newWord += ch;
+//                        whitespace = 0; 
+//                    }
+//                    if ( ch != ',' && ch != '\t' && ch != '(' )
+//                    {
+//                        if (listIndex == 3)
+//                        {
+//                        newWord += ch;
+//                        whitespace = 0;
+//                        }
+//                    }
+//                // Wanneer newWord een waarde heeft en de volgende char een spatie is of een volgende regel is, voeg dit woord toe aan de lijst waar de lijstIndex op dat moment is
+//
+//                    if (listIndex == 1 && newWord.length() > 0 && ch == ' ')
+//                    {
+//                        
+//                         values.add(newWord);
+//                         
+//                         listIndex ++;
+//                    
+//                         newWord = "";
+//                    }
+//                    if (listIndex == 2 && newWord.length() > 0 && ch == ' ')
+//                    {
+//                        values.add(newWord);
+//                       
+//                        listIndex ++;
+//                    
+//                        newWord = "";
+//                    }
+//                    
+//                    if (listIndex == 3 && ch == '(')
+//                    {
+//                        values.add(newWord);
+//                        //System.out.print("2@" + newWord);
+//                        listIndex++; 
+//                        newWord = "";
+//                        
+//                    }
+//                    
+//                    if (listIndex == 4 && ch == ')' || ch == '/')
+//                    {
+//                        values.add(newWord);
+//                        newWord = "";
+//                        stop = true;
+//                        listIndex = 1;
+//                    }
+//
+//                    
+//                } // Check if newword een value heeft en het eerstvolgende char een whitespace is. Dan list.add
+//                
+//             } 
                               
     }
     // Bernard zou deze doen maar is ziek, 
     void orderGenres(char ch)
     {
         if ( release ) {
-                    if (ch == '{' || ch == '}'){
-                        
-                        values.clear();
-                        release = true;
-                    }
-                    else if ( step == 1 ) {
+                    
+                    if ( step == 1 ) {
                         if ( charIndex > 0 && ch == '(' ) {
                             step = 2; 
                             values.add(newWord);
                             newWord = "";
-                        } else if (ch != ',' && ch != '\t'  ) {
+                        } else if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '(') || (ch == ')') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') ) {
                             newWord += ch;
                         }
                     }
 
                     if ( step == 2 ) {
-                            if ((ch >= '0' && ch <= '9'))
-                            {
-                                newWord += ch;
-                            }
-                            
-                            if (ch == ')')
-                            {
-                                if (newWord.length() == 4)
-                                {
-                                values.add(newWord);
-                                step = 3;
-                                newWord = "";
-                                }
-                                // Delete string, is geen goeie string
-                                else
-                                {
-                                    values.clear();
-                                    step = 3;
-                                }
-                            }
+                        if ( ch == ')' ) {
+                            step = 3;
+                            values.add(newWord);
+                            newWord = "";
+                        } else if ( (ch >= '0' && ch <= '9') ) {
+                            newWord += ch;
                         }
+                    }
 
                     if ( step == 3 ) {
                         if ( ch == '{' ) {
@@ -429,39 +451,73 @@ public class Orderdata {
                 }
     }
     void orderMovies(char ch)
-    {                                  
-         if ( release ) {
-                    
-                    if ( step == 1 ) {
-                        
-                        if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') || (ch >= ' ') || ch == '#' ) {
-                            
-                            if ( ch == '(' ) {
-                                step = 2;
-                                values.add(newWord);
-                                newWord = "";
-                            } else {
-                                newWord += ch;
-                            }
-                        
-                        }
-                        
+    {                                
+         boolean comment = false;
+          if (stop == false){              
+                                if (values.size() == 0)
+                                {       
+                                        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch == ',')
+                                        {
+                                            if (whitespace != 0 && newWord.length() > 1)
+                                            {
+                                            newWord += ' ';
+                                            newWord += ch;
+                                            whitespace = 0;
+                                            }
+                                            // Gewoon een letter toevoegen aan newWord
+                                            else
+                                            {
+                                            newWord += ch;
+                                            whitespace = 0;
+                                            }
+                                        }
+                                }
+                                else if (ch == ' ' || ch == '\t')
+                                {
+                                    whitespace ++;
+                                }
+                                // Bij ( geeft die elke keer het jaartal aan, dit hebben we niet nodig alleen de titel.
+                                if (ch == '(')
+                                {
+                                    if (!newWord.equals(movieSave))
+                                    {
+                                        if (comment){System.out.print(" SPLIT komt ( tegen ");}
+                                        values.add(newWord);
+                                        movieSave = newWord;
+                                        newWord = "";
+                                    }
+                                    else 
+                                    {
+                                        values.clear();
+                                        newWord = "";
+                                        stop = true;
+                                    }
+                                }
+                                // When it is a year
+                                if (values.size() == 1)
+                                {
+
+                                    if ((ch >= '0' && ch <= '9'))
+                                    {
+                                        newWord += ch;
+                                    }
+                                    if (ch == ')')
+                                    {
+                                        if (newWord.length() == 4 && values.size() == 1)
+                                        {
+                                        values.add(newWord);
+                                        newWord = "";
+                                        stop = true;
+                                        }
+                                        // Delete string, is geen goeie string
+                                        else
+                                        {
+                                            values.clear();
+                                            newWord = "";
+                                            stop = true;
+                                        }
+                                    }
+                                }
                     }
-                    
-                    if ( step == 2 ) {
-                        
-                        if ( (ch >= '0' && ch <= '9') && ch != '(' && ch != ')' ) {
-                            newWord += ch;
-                        }
-                        if ( ch == ')' ) {
-                            step = 3;
-                            values.add(newWord);
-                            newWord = "";
-                        }
-                    
-                    }
-                    
-                    
-                } 
     }    
 }

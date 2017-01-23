@@ -91,11 +91,11 @@ public class DB {
                         }
                         else if (file == "movies")
                         {
-                            stm = "INSERT INTO movies(id, movie, year) VALUES(?, ?, ?)";
+                            stm = "INSERT INTO movies(movie_id, movie, year) VALUES(?, ?, ?)";
                             pst = con.prepareStatement(stm);
                             pst.setInt(1, indexer);
-                            pst.setString(2, values.get(1));
-                            pst.setInt(3, Integer.parseInt(values.get(2)));
+                            pst.setString(2, values.get(0));
+                            pst.setInt(3, Integer.parseInt(values.get(1)));
                         }
                         else if (file == "ratings")
                         {
@@ -109,24 +109,13 @@ public class DB {
                         }
                         else if (file == "locations")
                         {
-                             stm = "INSERT INTO locations(id, movie, year, location) VALUES(?, ?, ?, ?)";
-                             pst = con.prepareStatement(stm);
-                             pst.setInt(1, indexer);
-                             pst.setString(2, values.get(0));
-                             pst.setInt(3, Integer.parseInt(values.get(1)));
-                             pst.setString(4, values.get(2));
-                             
+                             stm = "INSERT INTO locations(id, location, movie, year) VALUES(?, ?, ?, ?)";
                         }
                         else if (file == "genres")
                         {
-                            stm = "INSERT INTO genres(id, movie, year, genre) VALUES(?, ?, ?, ?)";
-                            pst = con.prepareStatement(stm);
-                            pst.setInt(1, indexer);
-                            pst.setString(2, values.get(0));
-                            pst.setInt(3, Integer.parseInt(values.get(1)));
-                            pst.setString(4, values.get(2));
+                             stm = "INSERT INTO genres(id, genre, movie, year) VALUES(?, ?, ?, ?)";
                         }
-                        if (file == "actors" || file == "actresses")
+                        if (file == "actors" || file == "actresses" || file == "locations" || file == "genres")
                         {
                         pst = con.prepareStatement(stm);
                         pst.setInt(1, indexer);

@@ -47,11 +47,7 @@ public class Parser {
         // Split every line
         s.useDelimiter("[;\r\n]+");
         // Save in a list
-
-
-
-        while(s.hasNext() && indexer < 2500000) {
-
+        while(s.hasNext()/* && indexer < 100000*/) {
             String temporary = s.next();
             ordener.orderMain(temporary, fileName, indexer);
             indexer++;
