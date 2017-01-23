@@ -23,7 +23,8 @@ public class MakeCSV {
     
     static void MakeCSV(List<String> values, String file) throws IOException
     {
-        String CSVurl = "/Users/jorbe/Google Drive/Big Data Project/CSV/CSV Jorben/" + file + ".csv";
+        String user = System.getProperty("user.name");
+        String CSVurl = "/Users/" + user + "/Google Drive/Big Data Project/CSV/CSV Jorben/" + file + ".csv";
         FileWriter Writer = new FileWriter(CSVurl, true);
         String line = "";
         for (int i =0; i < values.size(); i++)

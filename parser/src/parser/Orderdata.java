@@ -54,6 +54,7 @@ public class Orderdata {
                 good = true;
                 step = 1;
                 space = 0;
+                Boolean release = true;
                 release = true;
                 stepfilled = false;
                 
@@ -61,136 +62,148 @@ public class Orderdata {
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
                     {
-                        if (file == "actors" || file == "actresses")
+                        if ("actors".equals(file) || "actresses".equals(file))
                         {
                         orderActors(ch);
                         charIndex ++;
                         }
                         
-                        if (file == "movies")
+                        if ("movies".equals(file))
                         {
                             orderMovies(ch);
                             charIndex ++;
                         }
-                        if (file == "ratings")
+                        if ("ratings".equals(file))
                         {
                             orderRatings(ch);
                             charIndex++;
-                        }/*
-                        if (file == "genres")
+                        }
+                        if ("genres".equals(file))
                         {
                             orderGenres(ch);
                             charIndex++;
-                        }/*
-                        if (file == "locations")
+                        }
+                        if ("locations".equals(file))
                         {
                             orderLocations(ch);
                             charIndex++;
-                        }*/
+                        }
                     }
             //Voeg de laatste nog even toe
-            if (file == "genres" || file == "locations")
+            if ("genres".equals(file) || "locations".equals(file))
             {
                     values.add(newWord);
                     newWord = "";
             }
-            // Filter fouten in de gegeven lijsten.
-            if ((file == "actors" || file == "actresses") && values.size() != 3)
+            
+                      // Filter fouten in de gegeven lijsten.
+            if (("actors".equals(file) || "actresses".equals(file)) && values.size() != 3)
             {
                 values.clear();
             }
-            if (file == "movies" && values.size() != 2)
+            if ("movies".equals(file) && values.size() != 2)
             {
                 values.clear();
             }
             
-        
         if (values.size() > 1 && values.size() < 5)
         {   
-            MakeCSV.MakeCSV(values, file);
+            //MakeCSV.MakeCSV(values, file);
             
-            /*
+            
             System.out.print("index: ");
             System.out.print(indexer);
             System.out.print(". File: ");
             System.out.print(file);
             for (int i =0; i< values.size(); i++)
             {
-            System.out.print(" [ ");
+            System.out.print("[");
             System.out.print(values.get(i));
-            System.out.print(" ] ");
+            System.out.print("] ");
             }
             System.out.println(" ");
-            */
-            // Voor de Database
-            //DB.Database(values, file, indexer);
+            DB.Database(values, file, indexer);
             
         }
-        
         // Reset values
         values.clear();
                
     }
             
     // Bernard zou deze doen maar is ziek.
-    void orderLocations(char ch)
+    void orderLocations(char ch)  
     {
         if ( release ) {
                     
-                    if ( step == 1 ) {
-                        if ( ch == '(' ) {
+                    if ( step == 1 )                        
+                        if ( ch == '(' ) 
+                        {
+                           if (!(movieSave).equals(newWord)){
                             step = 2;
                             values.add(newWord);
+                            //System.out.println(wordSave + "@");
+                           // System.out.println(newWord + "@");
+                            movieSave = newWord;
                             newWord = "";
-                        } else if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '(') || (ch == ')') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') || (ch >= ' ') ) {
+                            }
+                           
+                           else {
+                               newWord ="";
+                               release = false;
+                           }
+                        } else if (ch != ',' && ch != '\t'  ) {
                             newWord += ch;
                         }
-                    }
                     
-                    if ( step == 2 ) {
-                        if ( ch == ')' ) {
-                            step = 3;
-                            values.add(newWord);
-                            newWord = "";
-                        } else if ( (ch >= '0' && ch <= '9') ) {
-                            newWord += ch;
+                    
+                    if ( step == 2)                       
+                    {
+                            if ((ch >= '0' && ch <= '9'))
+                            {
+                                newWord += ch;
+                            }
+                            
+                            if (ch == ')')
+                            {
+                                if (newWord.length() == 4)
+                                {
+                                values.add(newWord);
+                                step = 3;
+                                newWord = "";
+                                }
+                                // Delete string, is geen goeie string
+                                else
+                                {
+                                    values.clear();
+                                    step = 3;
+                                }
+                            }
                         }
-                    }
+                    
                     
                     if ( step == 3 ) {
-                        if ( ch == '{' ) {
-                            
-                            release = false;
-                        } else {
-                            step = 4;
-                        }
-                       
-                    }
-                    
-                    if ( step == 4 ) {
                         if ( ch == '{' ) {
                             release = false;
                         }
                         
-                        if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') || (ch >= ' ') && ch != ',' && ch != ')' && ch != '{' ) {
+                        if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?') || (ch == '"')|| (ch >= ' ') && ch != ',' && ch != ')' && ch != '{' ) {
                             newWord += ch;
                         }
                     }
                     
-                } else {
+        } else {
                     if ( ch == '}' ) {
                         release = true;
                         step = 4;
                     }
                 }
-    }
-            
+    }       
             
     void orderActors(char ch)
     {
         boolean comment = false;
           if (stop == false){
-                        if (values.size() == 0 && newWord.length() == 0 && charIndex < 3 && (ch == '\t' || whitespace > 2))
+                        if (values.isEmpty() && newWord.length() == 0 && charIndex < 3 && (ch == '\t' || whitespace > 2))
                         {
                             repeat = true;
                             values.add(nameSave);
@@ -213,8 +226,8 @@ public class Orderdata {
                                     }
                                     // Na meer dan 2 spaties staat de film
                                     else if (ch != ',')
-                                        {   
-                                            // Iemand met een naam van minder dan 3 letters is niet geldig
+                                        {
+                                            // Iemand met een naam minder dan 3 letters is niet geldig
                                             if (whitespace > 1 && repeat == false && newWord.length() > 3)
                                             {
                                             if (comment){System.out.print(" SPLIT WHITESPACE > 1 ");}
@@ -243,8 +256,7 @@ public class Orderdata {
                                 }
                                 // Bij ( geeft die elke keer het jaartal aan, dit hebben we niet nodig alleen de titel.
                                 if (ch == '(')
-                                {
-                                   if (!newWord.equals(movieSave))
+                                {if (!newWord.equals(movieSave))
                                    {
                                        
                                         if (comment){System.out.print(" SPLIT komt ( tegen ");}
@@ -252,17 +264,17 @@ public class Orderdata {
                                         // Sla movie op, wanneer de volgende dat ook is word deze niet nog vaker opgeslagen
                                         movieSave = newWord;
 
-                                        newWord = "";
-                                   }
-                                   // Wanneer het een serie is en al een keer is opgeslagen sla niks op
+                                   newWord = "";
+
+                                }
+                                
+                                // Wanneer het een serie is en al een keer is opgeslagen sla niks op
                                    else 
                                    {
                                        values.clear();
                                        newWord = "";
                                        stop = true;
                                    }
-
-                                }
                         }
                         // When it is a year
                         else if (values.size() == 2)
@@ -289,144 +301,53 @@ public class Orderdata {
                                 }
                             }
                         }
-                    }
+                        }
+          }
     }
     
     void orderRatings(char ch)
-    {
-        
-        if ( release ) {
-            
-            if ( step == 1 ) {
-              
-                if ( ((ch >= 0 && ch <= 9) || ch == '.' || ch == ' ') && space < 17 ) {
-                    space++;
-                }
-                
-                if ( space >= 17 ) {
-                    step = 2;
-                }
-                
-            }
-            
-            if ( step == 2 ) {
-                if ( ch != ' ' ) {
-                    System.out.print(ch);
-                    stepfilled = true;
-                }
-                if ( ch == ' ' && stepfilled ) {
-                    step = 3;
-                }
-            }
-            
-            if ( step == 3 ) {
-                if ( (ch >= 0 && ch <= 9) ) {
-                    //  System.out.print(ch);
-                }
-            }
-            
-        }
-        
-        
-        
-        
-        
-        
-//       if(stop == false){
-//           // Kijkt of char spatie is
-//           if (ch == ' ')
-//           {
-//           whitespace++;
-//           }    
-//                // Sla de eerste 17 over 
-//                if (charIndex > 17)
-//                {
-//                
-//                    if (listIndex == 3 && ch == ' ')
-//                    {
-//                        newWord += ch;
-//                        whitespace = 0;
-//                    }
-//                    if (listIndex != 3 && (ch >= '0' && ch <= '9') || ch == '.')
-//                    {
-//                        newWord += ch;
-//                        whitespace = 0; 
-//                    }
-//                    if ( ch != ',' && ch != '\t' && ch != '(' )
-//                    {
-//                        if (listIndex == 3)
-//                        {
-//                        newWord += ch;
-//                        whitespace = 0;
-//                        }
-//                    }
-//                // Wanneer newWord een waarde heeft en de volgende char een spatie is of een volgende regel is, voeg dit woord toe aan de lijst waar de lijstIndex op dat moment is
-//
-//                    if (listIndex == 1 && newWord.length() > 0 && ch == ' ')
-//                    {
-//                        
-//                         values.add(newWord);
-//                         
-//                         listIndex ++;
-//                    
-//                         newWord = "";
-//                    }
-//                    if (listIndex == 2 && newWord.length() > 0 && ch == ' ')
-//                    {
-//                        values.add(newWord);
-//                       
-//                        listIndex ++;
-//                    
-//                        newWord = "";
-//                    }
-//                    
-//                    if (listIndex == 3 && ch == '(')
-//                    {
-//                        values.add(newWord);
-//                        //System.out.print("2@" + newWord);
-//                        listIndex++; 
-//                        newWord = "";
-//                        
-//                    }
-//                    
-//                    if (listIndex == 4 && ch == ')' || ch == '/')
-//                    {
-//                        values.add(newWord);
-//                        newWord = "";
-//                        stop = true;
-//                        listIndex = 1;
-//                    }
-//
-//                    
-//                } // Check if newword een value heeft en het eerstvolgende char een whitespace is. Dan list.add
-//                
-//             } 
-                              
+    {                    
     }
-    // Bernard zou deze doen maar is ziek, 
     void orderGenres(char ch)
     {
         if ( release ) {
-                    
-                    if ( step == 1 ) {
+                    if (ch == '{' || ch == '}'){
+                        
+                        values.clear();
+                        release = true;
+                    }
+                    else if ( step == 1 ) {
                         if ( charIndex > 0 && ch == '(' ) {
                             step = 2; 
                             values.add(newWord);
                             newWord = "";
-                        } else if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '(') || (ch == ')') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') ) {
+                        } else if (ch != ',' && ch != '\t'  ) {
                             newWord += ch;
                         }
                     }
 
                     if ( step == 2 ) {
-                        if ( ch == ')' ) {
-                            step = 3;
-                            values.add(newWord);
-                            newWord = "";
-                        } else if ( (ch >= '0' && ch <= '9') ) {
-                            newWord += ch;
+                            if ((ch >= '0' && ch <= '9'))
+                            {
+                                newWord += ch;
+                            }
+                            
+                            if (ch == ')')
+                            {
+                                if (newWord.length() == 4)
+                                {
+                                values.add(newWord);
+                                step = 3;
+                                newWord = "";
+                                }
+                                // Delete string, is geen goeie string
+                                else
+                                {
+                                    values.clear();
+                                    step = 3;
+                                }
+                            }
                         }
-                    }
 
                     if ( step == 3 ) {
                         if ( ch == '{' ) {
@@ -451,10 +372,10 @@ public class Orderdata {
                 }
     }
     void orderMovies(char ch)
-    {                                
-         boolean comment = false;
+    { 
+              boolean comment = false;
           if (stop == false){              
-                                if (values.size() == 0)
+                                if (values.isEmpty())
                                 {       
                                         if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch == ',')
                                         {
@@ -518,6 +439,7 @@ public class Orderdata {
                                         }
                                     }
                                 }
-                    }
-    }    
-}
+                      }
+            }                    
+       }   
+
