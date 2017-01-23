@@ -109,13 +109,24 @@ public class DB {
                         }
                         else if (file == "locations")
                         {
-                             stm = "INSERT INTO locations(id, location, movie, year) VALUES(?, ?, ?, ?)";
+                             stm = "INSERT INTO locations(id, movie, year, location) VALUES(?, ?, ?, ?)";
+                             pst = con.prepareStatement(stm);
+                             pst.setInt(1, indexer);
+                             pst.setString(2, values.get(0));
+                             pst.setInt(3, Integer.parseInt(values.get(1)));
+                             pst.setString(4, values.get(2));
+                             
                         }
                         else if (file == "genres")
                         {
-                             stm = "INSERT INTO genres(id, genre, movie, year) VALUES(?, ?, ?, ?)";
+                            stm = "INSERT INTO genres(id, movie, year, genre) VALUES(?, ?, ?, ?)";
+                            pst = con.prepareStatement(stm);
+                            pst.setInt(1, indexer);
+                            pst.setString(2, values.get(0));
+                            pst.setInt(3, Integer.parseInt(values.get(1)));
+                            pst.setString(4, values.get(2));
                         }
-                        if (file == "actors" || file == "actresses" || file == "locations" || file == "genres")
+                        if (file == "actors" || file == "actresses")
                         {
                         pst = con.prepareStatement(stm);
                         pst.setInt(1, indexer);

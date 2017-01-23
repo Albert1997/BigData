@@ -78,17 +78,17 @@ public class Orderdata {
                         {
                             orderRatings(ch);
                             charIndex++;
-                        }
+                        }*/
                         if (file == "genres")
                         {
                             orderGenres(ch);
                             charIndex++;
-                        }*/
+                        }/*
                         if (file == "locations")
                         {
                             orderLocations(ch);
                             charIndex++;
-                        }
+                        }*/
                     }
             //Voeg de laatste nog even toe
             if (file == "genres" || file == "locations")
@@ -112,7 +112,7 @@ public class Orderdata {
             System.out.print("] ");
             }
             System.out.println(" ");
-            DB.Database(values, file, indexer);
+            //DB.Database(values, file, indexer);
             
         }
         // Reset values
@@ -121,7 +121,7 @@ public class Orderdata {
     }
             
     // Bernard zou deze doen maar is ziek.
-    void orderLocations(char ch)
+    void orderLocations(char ch)  
     {
         if ( release ) {
                     
@@ -141,37 +141,42 @@ public class Orderdata {
                                newWord ="";
                                release = false;
                            }
-                        } else if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '(') || (ch == ')') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') || (ch >= ' ') ) {
+                        } else if (ch != ',' && ch != '\t'  ) {
                             newWord += ch;
                         }
                     
                     
-                    if ( step == 2 ) {
-                        if ( ch == ')' ) {
-                            step = 3;
-                            values.add(newWord);
-                            newWord = "";
-                        } else if ( (ch >= '0' && ch <= '9') ) {
-                            newWord += ch;
+                    if ( step == 2)                       
+                    {
+                            if ((ch >= '0' && ch <= '9'))
+                            {
+                                newWord += ch;
+                            }
+                            
+                            if (ch == ')')
+                            {
+                                if (newWord.length() == 4)
+                                {
+                                values.add(newWord);
+                                step = 3;
+                                newWord = "";
+                                }
+                                // Delete string, is geen goeie string
+                                else
+                                {
+                                    values.clear();
+                                    step = 3;
+                                }
+                            }
                         }
-                    }
+                    
                     
                     if ( step == 3 ) {
-                        if ( ch == '{' ) {
-                            
-                            release = false;
-                        } else {
-                            step = 4;
-                        }
-                       
-                    }
-                    
-                    if ( step == 4 ) {
                         if ( ch == '{' ) {
                             release = false;
                         }
                         
-                        if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') || (ch >= ' ') && ch != ',' && ch != ')' && ch != '{' ) {
+                        if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?') || (ch == '"')|| (ch >= ' ') && ch != ',' && ch != ')' && ch != '{' ) {
                             newWord += ch;
                         }
                     }
@@ -182,8 +187,7 @@ public class Orderdata {
                         step = 4;
                     }
                 }
-    }
-            
+    }       
             
     void orderActors(char ch)
     {
@@ -364,26 +368,43 @@ public class Orderdata {
     void orderGenres(char ch)
     {
         if ( release ) {
-                    
-                    if ( step == 1 ) {
+                    if (ch == '{' || ch == '}'){
+                        
+                        values.clear();
+                        release = true;
+                    }
+                    else if ( step == 1 ) {
                         if ( charIndex > 0 && ch == '(' ) {
                             step = 2; 
                             values.add(newWord);
                             newWord = "";
-                        } else if ( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '(') || (ch == ')') || (ch == '!') || (ch == '?') || (ch == '"') || (ch >= '0' && ch <= '9') ) {
+                        } else if (ch != ',' && ch != '\t'  ) {
                             newWord += ch;
                         }
                     }
 
                     if ( step == 2 ) {
-                        if ( ch == ')' ) {
-                            step = 3;
-                            values.add(newWord);
-                            newWord = "";
-                        } else if ( (ch >= '0' && ch <= '9') ) {
-                            newWord += ch;
+                            if ((ch >= '0' && ch <= '9'))
+                            {
+                                newWord += ch;
+                            }
+                            
+                            if (ch == ')')
+                            {
+                                if (newWord.length() == 4)
+                                {
+                                values.add(newWord);
+                                step = 3;
+                                newWord = "";
+                                }
+                                // Delete string, is geen goeie string
+                                else
+                                {
+                                    values.clear();
+                                    step = 3;
+                                }
+                            }
                         }
-                    }
 
                     if ( step == 3 ) {
                         if ( ch == '{' ) {
