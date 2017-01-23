@@ -19,8 +19,8 @@ import java.util.Scanner;
  */
 public class Parser {
 
-    private static String temporary = "";
-    private static Orderdata ordener = new Orderdata();
+    private static final String temporary = "";
+    private static final Orderdata ordener = new Orderdata();
     private static int indexer = 0;
     
     

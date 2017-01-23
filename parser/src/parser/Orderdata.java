@@ -5,11 +5,9 @@
  */
 package parser;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 // Jorben
 public class Orderdata {
@@ -109,7 +107,7 @@ public class Orderdata {
         {   
             MakeCSV.MakeCSV(values, file);
             
-            /*
+            
             System.out.print("index: ");
             System.out.print(indexer);
             System.out.print(". File: ");
@@ -121,7 +119,7 @@ public class Orderdata {
             System.out.print(" ] ");
             }
             System.out.println(" ");
-            */
+            
             // Voor de Database
             //DB.Database(values, file, indexer);
             
@@ -454,7 +452,7 @@ public class Orderdata {
     {                                
          boolean comment = false;
           if (stop == false){              
-                                if (values.size() == 0)
+                                if (values.isEmpty())
                                 {       
                                         if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch == ',')
                                         {

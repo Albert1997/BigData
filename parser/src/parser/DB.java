@@ -5,13 +5,8 @@
  */
 package parser;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -81,48 +76,68 @@ public class DB {
         
                     try{
                         con = DriverManager.getConnection(url, user, password);
-                        if (file == "actors")
-                        {
-                            stm = "INSERT INTO actors(id, name, movie, year) VALUES(?, ?, ?, ?)";
-                        }
-                        else if (file == "actresses")
-                        {
-                            stm = "INSERT INTO actresses(id, name, movie, year) VALUES(?, ?, ?, ?)";
-                        }
-                        else if (file == "movies")
-                        {
-                            stm = "INSERT INTO movies(movie_id, movie, year) VALUES(?, ?, ?)";
-                            pst = con.prepareStatement(stm);
-                            pst.setInt(1, indexer);
-                            pst.setString(2, values.get(0));
-                            pst.setInt(3, Integer.parseInt(values.get(1)));
-                        }
-                        else if (file == "ratings")
-                        {
-                            stm = "INSERT INTO ratings(id, votes, rating, movie, year) VALUES(?, ?, ?, ?, ?)";
-                            pst = con.prepareStatement(stm);
-                            pst.setInt(1, indexer);
-                            pst.setInt(2, Integer.parseInt(values.get(0)));
-                            pst.setFloat(3, Float.parseFloat(values.get(1)));
-                            pst.setString(4, values.get(2));
-                            pst.setInt(5, Integer.parseInt(values.get(3)));
-                        }
-                        else if (file == "locations")
-                        {
-                             stm = "INSERT INTO locations(id, location, movie, year) VALUES(?, ?, ?, ?)";
-                        }
-                        else if (file == "genres")
-                        {
-                             stm = "INSERT INTO genres(id, genre, movie, year) VALUES(?, ?, ?, ?)";
-                        }
-                        if (file == "actors" || file == "actresses" || file == "locations" || file == "genres")
-                        {
-                        pst = con.prepareStatement(stm);
-                        pst.setInt(1, indexer);
-                        pst.setString(2, values.get(0));
-                        pst.setString(3, values.get(1));
-                        pst.setInt(4, Integer.parseInt(values.get(2)));
-                        }
+                        if (null != file)
+                        switch (file) {
+                            
+                case "actors":
+                    stm = "INSERT INTO actors(id, name, movie, year) VALUES(?, ?, ?, ?)";
+                    pst = con.prepareStatement(stm);
+                    pst.setInt(1, indexer);
+                    pst.setString(2, values.get(0));
+                    pst.setString(3, values.get(1));
+                    pst.setInt(4, Integer.parseInt(values.get(2)));
+                    break;
+                    
+                case "actresses":
+                    stm = "INSERT INTO actresses(id, name, movie, year) VALUES(?, ?, ?, ?)";
+                    pst = con.prepareStatement(stm);
+                    pst.setInt(1, indexer);
+                    pst.setString(2, values.get(0));
+                    pst.setString(3, values.get(1));
+                    pst.setInt(4, Integer.parseInt(values.get(2)));
+                    
+                    break;
+                    
+                case "movies":
+                    stm = "INSERT INTO movies(movie_id, movie, year) VALUES(?, ?, ?)";
+                    pst = con.prepareStatement(stm);
+                    pst.setInt(1, indexer);
+                    pst.setString(2, values.get(0));
+                    pst.setInt(3, Integer.parseInt(values.get(1)));
+                    break;
+                    
+                case "ratings":
+                    stm = "INSERT INTO ratings(id, votes, rating, movie, year) VALUES(?, ?, ?, ?, ?)";
+                    pst = con.prepareStatement(stm);
+                    pst.setInt(1, indexer);
+                    pst.setInt(2, Integer.parseInt(values.get(0)));
+                    pst.setFloat(3, Float.parseFloat(values.get(1)));
+                    pst.setString(4, values.get(2));
+                    pst.setInt(5, Integer.parseInt(values.get(3)));
+                    break;
+                    
+                case "locations":
+                    stm = "INSERT INTO locations(id, movie, year, location) VALUES(?, ?, ?, ?)";
+                    pst = con.prepareStatement(stm);
+                    pst.setInt(1, indexer);
+                    pst.setString(2, values.get(0));
+                    pst.setInt(3, Integer.parseInt(values.get(1)));
+                    pst.setString(4, values.get(2));
+                    break;
+                    
+                case "genres":
+                    stm = "INSERT INTO genres(id, movie, year, genre) VALUES(?, ?, ?, ?)";
+                    pst = con.prepareStatement(stm);
+                    pst.setInt(1, indexer);
+                    pst.setString(2, values.get(0));
+                    pst.setInt(3, Integer.parseInt(values.get(1)));
+                    pst.setString(4, values.get(2));
+                    break;
+                    
+                default:
+                    break;
+            }
+
                         pst.executeUpdate();
                         System.out.print("Succes waarde in de database: ");
                         System.out.print(indexer);

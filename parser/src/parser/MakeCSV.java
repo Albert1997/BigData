@@ -10,10 +10,7 @@ package parser;
 //import static com.sun.org.apache.regexp.internal.RETest.test;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 //import static jdk.nashorn.internal.objects.NativeRegExp.test;
 
@@ -23,7 +20,7 @@ public class MakeCSV {
     
     static void MakeCSV(List<String> values, String file) throws IOException
     {
-        String CSVurl = "/Users/jorbe/Google Drive/Big Data Project/CSV/CSV Jorben/" + file + ".csv";
+        String CSVurl = "/Users/Albert/Google Drive/Big Data Project/CSV/CSV Jorben/" + file + ".csv";
         FileWriter Writer = new FileWriter(CSVurl, true);
         String line = "";
         for (int i =0; i < values.size(); i++)
