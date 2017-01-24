@@ -58,7 +58,6 @@ public class Orderdata {
                 space = 0;
                 Boolean release = true;
                 release = true;
-                stepfilled = false;
                 
                 
                     // Kijk daarna per zin char voor char wat er staat. 
@@ -89,7 +88,7 @@ public class Orderdata {
                         {
                             orderLocations(ch);
                             charIndex++;
-                        }*/
+                        }
                         if (file == "soundtracks")
                         {
                             orderSoundtracks(ch);
@@ -130,8 +129,7 @@ public class Orderdata {
             }
             System.out.println(" ");
            // DB.Database(values, file, indexer);
->>>>>>> origin/master
-            
+
         }
         // Reset values
         values.clear();
