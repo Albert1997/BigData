@@ -27,7 +27,7 @@ public class Parser {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // Locaties voor de files
         List<String> filenames = new ArrayList();
-        filenames.addAll(Arrays.asList("locations", "actors", "actresses", "ratings", "genres","movies"));
+        filenames.addAll(Arrays.asList("locations", "actors", "actresses", "ratings", "genres","movies","soundtracks"));
         String user = System.getProperty("user.name");
         String userURL = "/Users/" + user + "/Google Drive/Big Data Project/Files/";
         
@@ -50,7 +50,8 @@ public class Parser {
 
 
 
-        while(s.hasNext() && indexer < 2500000) {
+        while(s.hasNext() && indexer <2742833) 
+                {
 
             String temporary = s.next();
             ordener.orderMain(temporary, fileName, indexer);

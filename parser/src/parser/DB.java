@@ -78,7 +78,8 @@ public class DB {
         String password = "Informatica123";
         System.out.print("Current file: "); System.out.println(file);
         String stm = "";
-        
+        System.out.print(file);
+        System.out.println(" is de file waar we in de database zitten.");
                     try{
                         con = DriverManager.getConnection(url, user, password);
                         if (null != file)
@@ -136,6 +137,13 @@ public class DB {
                     pst.setInt(3, Integer.parseInt(values.get(1)));
                     pst.setString(4, values.get(2));
                     break;
+                case "soundtracks":
+                    stm = "INSERT INTO soundtracks1(soundtrack_id, movie, year, soundtrack) VALUES(?, ?, ?, ?)";
+                    pst = con.prepareStatement(stm);
+                    pst.setInt(1, indexer);
+                    pst.setString(2, values.get(0));
+                    pst.setInt(3, Integer.parseInt(values.get(1)));
+                    pst.setString(4, values.get(2));
                     
                 default:
                     break;
