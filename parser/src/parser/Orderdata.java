@@ -116,7 +116,7 @@ public class Orderdata {
             
         if (values.size() > 1 && values.size() < 5)
         {   
-           //MakeCSV.MakeCSV(values, file);
+           MakeCSV.MakeCSV(values, file);
             
             
             System.out.print("index: ");
@@ -130,7 +130,7 @@ public class Orderdata {
             System.out.print("] ");
             }
             System.out.println(" ");
-            DB.Database(values, file, indexer);
+            //DB.Database(values, file, indexer);
             
         }
         // Reset values
@@ -477,7 +477,7 @@ public class Orderdata {
             // Movie title
             if(step == 2 )
             {
-                if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?')|| (ch >= '0' && ch <= '9') || (ch == '(') || (ch == ' ') || (ch == '$') || (ch == '#') || (ch == '*') || (ch == '\'') || (ch != '"') || ch != ',' || ch != '.' || ch != ':' || ch != ';') 
+                if (((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?')|| (ch >= '0' && ch <= '9') || (ch == '(') || (ch == ' ') || (ch == '$') || (ch == '#') || (ch == '*') || (ch == '\'')) && ((ch != '"') || ch != ',' || ch != '.' || ch != ':' || ch != ';')) 
                 {   
                     if (ch == '(')
                     {
