@@ -128,6 +128,7 @@ public class DB {
                     pst.setInt(3, Integer.parseInt(values.get(1)));
                     pst.setString(4, values.get(2));
                     break;
+                    
                 case "genres":
                     stm = "INSERT INTO genres(id, movie, year, genre) VALUES(?, ?, ?, ?)";
                     pst = con.prepareStatement(stm);
