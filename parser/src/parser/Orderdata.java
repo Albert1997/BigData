@@ -37,7 +37,7 @@ public class Orderdata {
             int step = 1;
             int index = 0;
             int space = 0;
-            Boolean stepfilled = false;
+            int stepfilled = 0;
             Boolean release = true;
             Boolean good = true;
             
@@ -58,12 +58,11 @@ public class Orderdata {
                 space = 0;
                 Boolean release = true;
                 release = true;
-                stepfilled = false;
                 
                 
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
-                    {
+                    {/*
                         if ("actors".equals(file) || "actresses".equals(file))
                         {
                         orderActors(ch);
@@ -74,12 +73,12 @@ public class Orderdata {
                         {
                             orderMovies(ch);
                             charIndex ++;
-                        }
+                        }*/
                         if ("ratings".equals(file))
                         {
                             orderRatings(ch);
                             charIndex++;
-                        }
+                        }/*
                         if ("genres".equals(file))
                         {
                             orderGenres(ch);
@@ -89,12 +88,12 @@ public class Orderdata {
                         {
                             orderLocations(ch);
                             charIndex++;
-                        }*/
+                        }
                         if (file == "soundtracks")
                         {
                             orderSoundtracks(ch);
                             charIndex++;
-                        }
+                        }*/
                     }
             //Voeg de laatste nog even toe
             if ("genres".equals(file) || "locations".equals(file))
@@ -118,7 +117,7 @@ public class Orderdata {
            //MakeCSV.MakeCSV(values, file);
             
             
-            /*System.out.print("index: ");
+            System.out.print("index: ");
             System.out.print(indexer);
             System.out.print(". File: ");
             System.out.print(file);
@@ -128,7 +127,7 @@ public class Orderdata {
             System.out.print(values.get(i));
             System.out.print("] ");
             }
-            System.out.println(" ");*/
+            System.out.println(" ");
            // DB.Database(values, file, indexer);
             
         }
@@ -313,7 +312,108 @@ public class Orderdata {
     }
     
     void orderRatings(char ch)
-    {                    
+    {       
+        if ( release ) {
+            
+            if ( step == 1 ) {
+              
+                if ( ((ch >= 0 || ch <= 9) || ch == '.' || ch == ' ') && space < 17 ) {
+                    space++;
+                }
+                
+                if ( space >= 17 ) {
+                    step = 2;
+                    
+                }
+                
+            }
+            
+            if ( step == 2 ) {
+                if ( ch != ' ' ) {
+                    stepfilled = 1;
+                    //System.out.print(ch);
+                    newWord += ch;
+                }
+                if ( ch == ' ' && stepfilled == 1 ) {
+                    step = 3;
+                    values.add(newWord.trim());
+                    newWord = "";
+                }
+            }
+            
+            if ( step == 3 ) {
+                if ( ch != ' ' || (ch >= 0 && ch <= 9) || ch == '.' ) {
+                    
+                    //System.out.print(ch);
+                    newWord += ch;
+                    
+                    if ( ch == '.' ) {
+                        stepfilled = 2;
+                    }
+                    
+                } else if ( ch == ' ' && stepfilled == 2 ) {
+                    step = 4;
+                    values.add(newWord.trim());
+                    newWord = "";
+                }
+            }
+            
+            if ( step == 4 ) {
+                
+                if ( ch == '(' ) {
+                    step = 5;
+                    
+                    values.add(newWord.trim());
+                    newWord = "";
+                } else if ( (ch != ',') && (ch != ';') ) {
+                    //System.out.print(ch);
+                   
+                    newWord += ch;
+                    stepfilled = 3; 
+                
+                    
+                }
+                
+            }
+            
+            if ( step == 5 ) {
+                if ( (ch >= 0 || ch <= 9) && (ch != ' ') && (ch != '(') && (ch != ')') && (ch != '/') && !(ch >= 'a' && ch <= 'z') && !(ch >= 'A' && ch <= 'Z') && (ch != 'é') && (ch != ';') && (ch != '!') && (ch != '\'') && (ch != 'ô') && (ch != 'ö')&& (ch != '.') ) {
+                    
+                    //System.out.print(ch);
+                    
+                    if ( ch == ',' || ch == '?' || ch == '.' ) {
+                        newWord += 0;
+                    } else {
+                    newWord += ch;
+                    }
+                }
+                if ( ch == ')' ) {
+                    if (newWord.length() == 4)
+                        {
+                        step = 6;
+                        values.add(newWord.trim());
+                        newWord = "";
+                        stop = true;
+                        }
+                        // Delete string, is geen goeie string
+                        else
+                        {
+                            
+                            values.clear();
+                            stop = true;
+                        }
+                    
+                }
+                
+                
+            }
+            
+            if ( step == 6 ) {
+                //System.out.print("++++");
+                //hier hoeft niks te gebeuren
+            }
+            
+        }
     }
     void orderGenres(char ch)
     {
