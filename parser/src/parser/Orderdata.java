@@ -61,10 +61,9 @@ public class Orderdata {
                 stepfilled = false;
                 
                 
-                
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
-                    {/*
+                    {
                         if ("actors".equals(file) || "actresses".equals(file))
                         {
                         orderActors(ch);
@@ -100,7 +99,7 @@ public class Orderdata {
             //Voeg de laatste nog even toe
             if ("genres".equals(file) || "locations".equals(file))
             {
-                    values.add(newWord);
+                    values.add(newWord.trim());
                     newWord = "";
             }
             
@@ -119,7 +118,7 @@ public class Orderdata {
            MakeCSV.MakeCSV(values, file);
             
             
-            System.out.print("index: ");
+            /*System.out.print("index: ");
             System.out.print(indexer);
             System.out.print(". File: ");
             System.out.print(file);
@@ -129,8 +128,13 @@ public class Orderdata {
             System.out.print(values.get(i));
             System.out.print("] ");
             }
+<<<<<<< HEAD
             System.out.println(" ");
             //DB.Database(values, file, indexer);
+=======
+            System.out.println(" ");*/
+           // DB.Database(values, file, indexer);
+>>>>>>> origin/master
             
         }
         // Reset values
@@ -148,7 +152,7 @@ public class Orderdata {
                         {
                            if (!(movieSave).equals(newWord)){
                             step = 2;
-                            values.add(newWord);
+                            values.add(newWord.trim());
                             //System.out.println(wordSave + "@");
                            // System.out.println(newWord + "@");
                             movieSave = newWord;
@@ -175,7 +179,7 @@ public class Orderdata {
                             {
                                 if (newWord.length() == 4)
                                 {
-                                values.add(newWord);
+                                values.add(newWord.trim());
                                 step = 3;
                                 newWord = "";
                                 }
@@ -327,7 +331,7 @@ public class Orderdata {
                     else if ( step == 1 ) {
                         if ( charIndex > 0 && ch == '(' ) {
                             step = 2; 
-                            values.add(newWord);
+                            values.add(newWord.trim());
                             newWord = "";
                         } else if (ch != ',' && ch != '\t'  ) {
                             newWord += ch;
@@ -344,7 +348,7 @@ public class Orderdata {
                             {
                                 if (newWord.length() == 4)
                                 {
-                                values.add(newWord);
+                                values.add(newWord.trim());
                                 step = 3;
                                 newWord = "";
                                 }
