@@ -116,7 +116,7 @@ public class Orderdata {
             
         if (values.size() > 1 && values.size() < 5)
         {   
-           MakeCSV.MakeCSV(values, file);
+           //MakeCSV.MakeCSV(values, file);
             
             
             System.out.print("index: ");
@@ -130,7 +130,7 @@ public class Orderdata {
             System.out.print("] ");
             }
             System.out.println(" ");
-            //DB.Database(values, file, indexer);
+            DB.Database(values, file, indexer);
             
         }
         // Reset values
@@ -487,7 +487,7 @@ public class Orderdata {
                             {
                                 FirstSong = "";
                                 wordSave = newWord.trim();
-                                System.out.print("ik ben hier");
+                                //System.out.print("ik ben hier");
                             }
                           
                            //System.out.println(wordSave);

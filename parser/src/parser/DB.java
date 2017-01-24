@@ -76,7 +76,7 @@ public class DB {
         String url = "jdbc:postgresql://localhost/BigData";
         String user = "postgres";
         String password = "Informatica123";
-        System.out.print("Current file: "); System.out.println(file);
+        //System.out.print("Current file: "); System.out.println(file);
         String stm = "";
         System.out.print(file);
         System.out.println(" is de file waar we in de database zitten.");
