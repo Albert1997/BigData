@@ -20,7 +20,9 @@ public class Orderdata {
             // Opslaan gegevens  
             String newWord;
             String nameSave = "";
-            
+            String wordSave = "";
+            String yearSave = "";
+            String FirstSong = "";
             // Algemeen
             int whitespace = 0;
             boolean stop;
@@ -61,7 +63,7 @@ public class Orderdata {
                 
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
-                    {/*
+                    {
                         if ("actors".equals(file) || "actresses".equals(file))
                         {
                         orderActors(ch);
@@ -77,17 +79,22 @@ public class Orderdata {
                         {
                             orderRatings(ch);
                             charIndex++;
-                        }*/
+                        }
                         if ("genres".equals(file))
                         {
                             orderGenres(ch);
                             charIndex++;
-                        }/*
+                        }
                         if ("locations".equals(file))
                         {
                             orderLocations(ch);
                             charIndex++;
                         }*/
+                        if (file == "soundtracks")
+                        {
+                            orderSoundtracks(ch);
+                            charIndex++;
+                        }
                     }
             //Voeg de laatste nog even toe
             if ("genres".equals(file) || "locations".equals(file))
@@ -108,7 +115,7 @@ public class Orderdata {
             
         if (values.size() > 1 && values.size() < 5)
         {   
-            MakeCSV.MakeCSV(values, file);
+           //MakeCSV.MakeCSV(values, file);
             
             
             /*System.out.print("index: ");
@@ -440,6 +447,163 @@ public class Orderdata {
                                     }
                                 }
                       }
-            }                    
-       }   
+            }    
+    
+    
+    
+    
+    void orderSoundtracks(char ch)
+    { 
+        if(release && stop == false)
+        {
+            
+            int count = 0;
+            if(step == 1)
+            {
+                if (ch == '-')
+                {
+                    step = 10;
+                }
+                if (ch == '#')
+                {
+                    step = 2;
+                }
+                if (ch == ' ')
+                {
+                    step = 4;
+                }
+            }
+            // Movie title
+            if(step == 2 )
+            {
+                if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?')|| (ch >= '0' && ch <= '9') || (ch == '(') || (ch == ' ') || (ch == '$') || (ch == '#') || (ch == '*') || (ch == '\'') || (ch != '"') || ch != ',' || ch != '.' || ch != ':' || ch != ';') 
+                {   
+                    if (ch == '(')
+                    {
+                        if (newWord.length () > 3)
+                        {
+                            if(!wordSave.equals(newWord.trim()))
+                            {
+                                FirstSong = "";
+                                wordSave = newWord.trim();
+                                //System.out.print("ik ben hier");
+                            }
+                          
+                           //System.out.println(wordSave);
+                            //wordSave = newWord;
+                            step = 3;
+                            newWord = "";
+                        }
+                        else 
+                        {
+                            wordSave = "";
+                            stop = true;
+                        }
+                    }
+                    else if (ch == '#' && charIndex == 0 )
+                    {
+                        
+                    }
+                    else
+                    {
+                        newWord+=ch;
+                    }
+                
+                                               /*
+                    else if (ch == ' ' && newWord.length() != 0)
+                    {
+                        whitespace++;
+                    }
+                    else if (ch != ' ')
+                    {
+                        if ((whitespace != 0) && (newWord.length() != 0))
+                        {
+                            newWord += ' ';
+                            whitespace = 0;        
+                        } 
+                        newWord+= ch;
+                    }
+*/
+                }
+            }
+            // Jaar
+            if(step == 3)
+            {
+                if ( (ch >= '0' && ch <= '9') && ch != '(' && ch != ')' )
+                {
+                    newWord += ch;
+                    
+                }
+                if ( ch == ')' )
+                {   
+                    if (newWord.length() == 4)
+                    {
+                        yearSave = "";
+                        yearSave = newWord;
+                        step = 4;
+                        newWord = "";
+                    }
+                    else
+                    {
+                        yearSave = "";
+                        stop = true;
+                    }
+                }
+            }
+            // Soundtrack opslaan
+            if(step == 10)
+            {   
+                if (charIndex > 2)
+                {
+                    if (((ch >= 'a') || (ch >= 'A') || (ch == '!') || (ch == '?') || (ch == '"')|| (ch >= '0' && ch <= '9') || (ch == ' ')) && ch != ',')
+                    {              
+                        if(wordSave == "" && yearSave == "")
+                        {
+                            step = 4;
+                        }
+                       else if(((ch == '"' && newWord.length() > 2) || (ch == '(' && newWord.length() > 2))&& !newWord.toLowerCase().equals(FirstSong) )
+                        {
+                            
+                            if (wordSave != "" && yearSave != "" && newWord != "")
+                            {
+                                if(FirstSong == "")
+                                {
+                                    FirstSong = newWord.toLowerCase();
+                                   // System.out.print(FirstSong);
+                                }
+                                values.add(wordSave);
+                                values.add(yearSave);
+                                values.add(newWord);
+                            }
+                            
+                            else 
+                            {
+                                values.clear();
+                            }
+                            newWord = "";
+                            stop = true;
+                        }
+                       if (ch == ' ' && newWord.length() != 0)
+                       {
+                           whitespace++;
+                       }
+                       else
+                        {
+                            if (whitespace > 0 && newWord.length() != 0)
+                            {
+                                newWord += ' ';
+                                whitespace =0;
+                            }
+                            else if (whitespace > 0 && newWord.length() == 0)
+                            {
+                                whitespace =0;
+                            }
+                        newWord += ch;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}     
 
