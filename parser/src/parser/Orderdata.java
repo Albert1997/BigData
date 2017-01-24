@@ -58,11 +58,12 @@ public class Orderdata {
                 space = 0;
                 Boolean release = true;
                 release = true;
+                stepfilled = false;
                 
                 
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
-                    {/*
+                    {
                         if ("actors".equals(file) || "actresses".equals(file))
                         {
                         orderActors(ch);
@@ -73,12 +74,12 @@ public class Orderdata {
                         {
                             orderMovies(ch);
                             charIndex ++;
-                        }*/
+                        }
                         if ("ratings".equals(file))
                         {
                             orderRatings(ch);
                             charIndex++;
-                        }/*
+                        }
                         if ("genres".equals(file))
                         {
                             orderGenres(ch);
@@ -88,12 +89,12 @@ public class Orderdata {
                         {
                             orderLocations(ch);
                             charIndex++;
-                        }
+                        }*/
                         if (file == "soundtracks")
                         {
                             orderSoundtracks(ch);
                             charIndex++;
-                        }*/
+                        }
                     }
             //Voeg de laatste nog even toe
             if ("genres".equals(file) || "locations".equals(file))
@@ -114,7 +115,7 @@ public class Orderdata {
             
         if (values.size() > 1 && values.size() < 5)
         {   
-           //MakeCSV.MakeCSV(values, file);
+           MakeCSV.MakeCSV(values, file);
             
             
             System.out.print("index: ");
@@ -129,6 +130,7 @@ public class Orderdata {
             }
             System.out.println(" ");
            // DB.Database(values, file, indexer);
+>>>>>>> origin/master
             
         }
         // Reset values
@@ -576,7 +578,7 @@ public class Orderdata {
             // Movie title
             if(step == 2 )
             {
-                if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?')|| (ch >= '0' && ch <= '9') || (ch == '(') || (ch == ' ') || (ch == '$') || (ch == '#') || (ch == '*') || (ch == '\'') || (ch != '"') || ch != ',' || ch != '.' || ch != ':' || ch != ';') 
+                if (((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '!') || (ch == '?')|| (ch >= '0' && ch <= '9') || (ch == '(') || (ch == ' ') || (ch == '$') || (ch == '#') || (ch == '*') || (ch == '\'')) && ((ch != '"') || ch != ',' || ch != '.' || ch != ':' || ch != ';')) 
                 {   
                     if (ch == '(')
                     {
