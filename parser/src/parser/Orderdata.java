@@ -29,6 +29,8 @@ public class Orderdata {
             boolean repeat;
             int charIndex = 0;
             String movieSave = "";
+            String regex = "\\d+"; 
+            boolean lastName = false; 
             
             // Gemaakt voor ratings
             int listIndex = 1;
@@ -58,12 +60,13 @@ public class Orderdata {
                 space = 0;
                 Boolean release = true;
                 release = true;
+                lastName = false;
                 
                 
                     // Kijk daarna per zin char voor char wat er staat. 
                     for(char ch: myString.toCharArray())
-                    {
-                        if ("actors".equals(file) || "actresses".equals(file))
+                    {/*
+                        if ("actors".equals(file))
                         {
                         orderActors(ch);
                         charIndex ++;
@@ -78,12 +81,12 @@ public class Orderdata {
                         {
                             orderRatings(ch);
                             charIndex++;
-                        }
+                        }*/
                         if ("genres".equals(file))
                         {
                             orderGenres(ch);
                             charIndex++;
-                        }
+                        }/*
                         if ("locations".equals(file))
                         {
                             orderLocations(ch);
@@ -93,7 +96,7 @@ public class Orderdata {
                         {
                             orderSoundtracks(ch);
                             charIndex++;
-                        }
+                        }*/
                     }
             //Voeg de laatste nog even toe
             if ("genres".equals(file) || "locations".equals(file))
@@ -117,7 +120,7 @@ public class Orderdata {
            MakeCSV.MakeCSV(values, file);
             
             
-            System.out.print("index: ");
+          /*System.out.print("index: ");
             System.out.print(indexer);
             System.out.print(". File: ");
             System.out.print(file);
@@ -127,7 +130,7 @@ public class Orderdata {
             System.out.print(values.get(i));
             System.out.print("] ");
             }
-            System.out.println(" ");
+            System.out.println(" ");*/
            // DB.Database(values, file, indexer);
 
         }
@@ -157,7 +160,7 @@ public class Orderdata {
                                newWord ="";
                                release = false;
                            }
-                        } else if (ch != ',' && ch != '\t'  ) {
+                        } else if (ch != ',' && ch != '\t' && ch != '"') {
                             newWord += ch;
                         }
                     
@@ -205,11 +208,10 @@ public class Orderdata {
                 }
     }       
             
-    void orderActors(char ch)
-    {
-        boolean comment = false;
+    void orderActors(char ch){
+   boolean comment = false;
           if (stop == false){
-                        if (values.isEmpty() && newWord.length() == 0 && charIndex < 3 && (ch == '\t' || whitespace > 2))
+                        if (values.size() == 0 && newWord.length() == 0 && charIndex < 3 && (ch == '\t' || whitespace > 2))
                         {
                             repeat = true;
                             values.add(nameSave);
@@ -217,23 +219,16 @@ public class Orderdata {
                         }
                         // Woord 1 en woord 2               
                         if (values.size() < 2)
-                        {
-                                if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch == ',')
+                        {       
+                                if (ch != ',' && values.size() == 0)
+                                {
+                                    lastName = true;
+                                }
+                                if (ch != '(' && ch != ')' && ch != ' ' && ch != '\t' && ch != '"' && ch != ';' && ch != ',')
                                 {
                                     
                                     if (comment){System.out.print(ch);}
-                                    if (ch == ',' && charIndex > 5 && repeat == false)
-                                    {
-                                    if (comment){System.out.print(" SPLIT KOMMA INDEX > 5 ");}
-                                    values.add(newWord);
-                                    whitespace = 0;
-                                    nameSave = newWord;
-                                    newWord = "";
-                                    }
-                                    // Na meer dan 2 spaties staat de film
-                                    else if (ch != ',')
-                                        {
-                                            // Iemand met een naam minder dan 3 letters is niet geldig
+                                            // Iemand met een naam van minder dan 3 letters is niet geldig
                                             if (whitespace > 1 && repeat == false && newWord.length() > 3)
                                             {
                                             if (comment){System.out.print(" SPLIT WHITESPACE > 1 ");}
@@ -254,15 +249,25 @@ public class Orderdata {
                                             newWord += ch;
                                             whitespace = 0;
                                             }
-                                        }
+                                        
                                 }
-                                else if (ch == ' ' || ch == '\t')
+                                else if (ch == ' ' || ch == '\t' && !lastName)
                                 {
                                     whitespace ++;
                                 }
                                 // Bij ( geeft die elke keer het jaartal aan, dit hebben we niet nodig alleen de titel.
-                                if (ch == '(')
-                                {if (!newWord.equals(movieSave))
+                                if(lastName && ch == '\t')
+                                {
+                                        if (comment){System.out.print(" SPLIT komt \t tegen na komma ");}
+                                        values.add(newWord);
+                                        // Sla name op
+                                        nameSave = newWord;
+                                        lastName = false;
+                                        newWord = "";
+                                }
+                                if (ch == '(' && values.size() == 1)
+                                {
+                                   if (!newWord.equals(movieSave))
                                    {
                                        
                                         if (comment){System.out.print(" SPLIT komt ( tegen ");}
@@ -270,22 +275,25 @@ public class Orderdata {
                                         // Sla movie op, wanneer de volgende dat ook is word deze niet nog vaker opgeslagen
                                         movieSave = newWord;
 
-                                   newWord = "";
-
-                                }
-                                
-                                // Wanneer het een serie is en al een keer is opgeslagen sla niks op
+                                        newWord = "";
+                                   }
+                                   // Wanneer het een serie is en al een keer is opgeslagen sla niks op
                                    else 
                                    {
                                        values.clear();
                                        newWord = "";
                                        stop = true;
                                    }
+
+                                }
                         }
                         // When it is a year
                         else if (values.size() == 2)
                         {
-                            
+                            if (!newWord.matches(regex))
+                            {
+                                newWord = "";
+                            }
                             if ((ch >= '0' && ch <= '9'))
                             {
                                 newWord += ch;
@@ -307,8 +315,8 @@ public class Orderdata {
                                 }
                             }
                         }
-                        }
-          }
+                    }
+
     }
     
     void orderRatings(char ch)
@@ -428,7 +436,7 @@ public class Orderdata {
                             step = 2; 
                             values.add(newWord.trim());
                             newWord = "";
-                        } else if (ch != ',' && ch != '\t'  ) {
+                        } else if (ch != ',' && ch != '\t' && ch != '"') {
                             newWord += ch;
                         }
                     }
